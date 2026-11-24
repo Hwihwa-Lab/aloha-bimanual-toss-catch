@@ -1,0 +1,30 @@
+# Python & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+*.egg-info/
+dist/
+build/
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+
+# Secret Harness & Internal Governance (Universal IP Defense Axiom)
+.cursorrules
+.agents/
+DOCS_*.md
+MEMORY.md
+
+# Large Checkpoints (Exclude training artifacts, keep clean)
+checkpoints/*.zip
+!checkpoints/aloha_toss_catch_final.zip
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

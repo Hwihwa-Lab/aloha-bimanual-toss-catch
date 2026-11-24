@@ -1,0 +1,32 @@
+# Aloha Bimanual Dynamic Toss & Catch Gymnasium Environment
+> High-Speed Ballistic Projectile Interception & Compliant Damping for Dual 7-DOF Robotic Arms.
+
+## Overview
+- Project: Aloha Bimanual Toss and Catch
+- Engine: MuJoCo 3.x Physics
+- Environment API: Farama Gymnasium (id: `AlohaTossCatch-v0`)
+- Algorithm: Proximal Policy Optimization (PPO) via Stable-Baselines3
+- Hardware Target: ALOHA 14-DOF Bimanual Robot (ViperX kinematics)
+- Ecosystem Alignment: Hugging Face LeRobot
+
+## Core Specifications
+- Observation Dimension: 55 continuous values (joint positions, joint velocities, 6D projectile state, relative vectors, phase one-hot).
+- Action Dimension: 16 continuous controls (7 thrower torque motors, 2 servo fingers, 7 catcher torque motors).
+- Control Frequency: 50Hz (MuJoCo integrator Euler timestep dt=0.002s, frame_skip=10).
+- Peak Simulation Throughput: >12,500 FPS in headless vectorized mode.
+
+## 4-Phase State Machine
+1. Phase 0 [Grasp]: Left arm secures projectile.
+2. Phase 1 [Toss]: Left arm accelerates projectile toward parabolic apex (X=0.0m, Z=1.25m) and releases.
+3. Phase 2 [Flight]: Ballistic projectile airborne, right arm pre-positions cushion paddle.
+4. Phase 3 [Cushion]: Right arm absorbs impact via active damping, prevents bouncing, and locks catch.
+
+## Key Files
+- `assets/aloha_bimanual_toss.xml`: MuJoCo 3.x physical model.
+- `envs/toss_catch_env.py`: Gymnasium environment implementation.
+- `rewards/phase_reward.py`: 4-phase reward engine.
+- `render/hud_overlay.py`: 60fps telemetry HUD.
+- `Aloha_Toss_Catch_Colab.ipynb`: 1-click cloud training notebook.
+- `train_ppo.py`: PPO training script.
+- `evaluate.py`: Evaluation and video/GIF rollout renderer.
+

@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aloha-bimanual-toss-catch"
+version = "1.0.0"
+description = "14-DOF Bimanual Robotic Dynamic Toss & Catch Gymnasium Environment powered by MuJoCo 3.x"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Hwihwa Lab", email = "contact@hwihwalab.org" }
+]
+keywords = [
+    "reinforcement-learning",
+    "robotics",
+    "mujoco",
+    "gymnasium",
+    "aloha",
+    "bimanual",
+    "physical-ai",
+    "ppo",
+    "dynamic-manipulation",
+    "lerobot"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13"
+]
+dependencies = [
+    "mujoco>=3.1.0",
+    "gymnasium>=0.29.0",
+    "stable-baselines3>=2.3.0",
+    "torch>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "opencv-python>=4.8.0",
+    "pillow>=9.5.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch"
+Repository = "https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch.git"
+HuggingFace = "https://huggingface.co/hwihwalab"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["envs*", "rewards*", "render*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.xml", "*.png", "*.gif"]
+
