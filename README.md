@@ -78,7 +78,7 @@ model-index:
 [![LeRobot](https://img.shields.io/badge/LeRobot-Compatible-FFD21E)](https://github.com/huggingface/lerobot)
 [![Benchmark](https://img.shields.io/badge/Benchmark-100%25%20Catch%20%7C%200.59s%20Intercept-brightgreen)](#-benchmark-performance-matrix)
 [![GitHub](https://img.shields.io/badge/GitHub-aloha--bimanual--toss--catch-181717?logo=github)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **"Can Autonomous Dual-Arm Robots Catch High-Speed Aerial Projectiles with Compliant Damping?"**  
 > A high-precision Physical AI & dynamic robotics benchmark comparing high-speed bimanual toss-and-catch ballistics using Deep Reinforcement Learning (PPO) and compliant active damping in MuJoCo 3.x.  
@@ -89,8 +89,11 @@ model-index:
 > 📦 **Official Model Hub**: [🤗 hwihwalab/aloha-bimanual-toss-catch-model](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model) | 🐙 **GitHub Repository**: [Hwihwa-Lab/aloha-bimanual-toss-catch](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch) | 📊 **Dataset Hub**: [hwihwalab/aloha-bimanual-toss-catch-telemetry](https://huggingface.co/datasets/hwihwalab/aloha-bimanual-toss-catch-telemetry)
 
 <div align="center">
-  <img src="assets/cockpit_preview.png" alt="ALOHA Toss & Catch 60fps Telemetry Cockpit" width="100%" style="border-radius: 8px; border: 1px solid #223344; box-shadow: 0 8px 30px rgba(0,0,0,0.6);" />
-  <p><em>Figure 1: Real-time 60fps Telemetry Cockpit featuring 4-Phase HUD, Ballistic Altitude & Apex Delta Gauges, Intercept Radar, and Dual Wrist PiP Cameras.</em></p>
+  <video autoplay loop muted playsinline width="100%" poster="assets/cockpit_preview.png" style="border-radius: 8px; border: 1px solid rgba(0,240,255,0.35); box-shadow: 0 12px 40px rgba(0,0,0,0.85);">
+    <source src="https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model/resolve/main/assets/demo_video.mp4" type="video/mp4">
+    <source src="assets/demo_video.mp4" type="video/mp4">
+  </video>
+  <p><em>Figure 1: High-Definition 60fps Real-Time Interception Video (BULLET, LOB, HOOK) with 4-Phase HUD, Ballistic Gauges, and Dual Wrist PiP Cameras.</em></p>
 </div>
 
 ---

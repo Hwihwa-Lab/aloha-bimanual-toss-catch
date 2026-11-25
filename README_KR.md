@@ -78,7 +78,7 @@ model-index:
 [![LeRobot](https://img.shields.io/badge/LeRobot-호환%20생태계-FFD21E)](https://github.com/huggingface/lerobot)
 [![Benchmark](https://img.shields.io/badge/벤치마크-100%25%20요격%20%7C%200.59초%20도달-brightgreen)](#-정량적-벤치마크-성능-비교-매트릭스)
 [![GitHub](https://img.shields.io/badge/GitHub-aloha--bimanual--toss--catch-181717?logo=github)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **"자율 듀얼암 로봇은 초고속 공중 비행체를 능동 감쇠로 완충 캐칭할 수 있는가?"**  
 > 심층 강화학습(PPO)과 능동 감쇠 완충 제어를 결합하여 고속 양팔 탄도 투척 및 공중 요격을 실증하는 MuJoCo 3.x 기반 고정밀 피지컬 AI 로보틱스 벤치마크.  
@@ -89,8 +89,11 @@ model-index:
 > 📦 **공식 모델 허브**: [🤗 hwihwalab/aloha-bimanual-toss-catch-model](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model) | 🐙 **GitHub 저장소**: [Hwihwa-Lab/aloha-bimanual-toss-catch](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch) | 📊 **데이터셋 허브**: [hwihwalab/aloha-bimanual-toss-catch-telemetry](https://huggingface.co/datasets/hwihwalab/aloha-bimanual-toss-catch-telemetry)
 
 <div align="center">
-  <img src="assets/cockpit_preview.png" alt="ALOHA Toss & Catch 60fps 텔레메트리 콕핏" width="100%" style="border-radius: 8px; border: 1px solid #223344; box-shadow: 0 8px 30px rgba(0,0,0,0.6);" />
-  <p><em>그림 1: 4단계 위상 HUD, 탄도 고도 및 정점 델타 게이지, 요격 레이더, 듀얼 손목 PiP 카메라가 결합된 실시간 60fps 텔레메트리 콕핏.</em></p>
+  <video autoplay loop muted playsinline width="100%" poster="assets/cockpit_preview.png" style="border-radius: 8px; border: 1px solid rgba(0,240,255,0.35); box-shadow: 0 12px 40px rgba(0,0,0,0.85);">
+    <source src="https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model/resolve/main/assets/demo_video.mp4" type="video/mp4">
+    <source src="assets/demo_video.mp4" type="video/mp4">
+  </video>
+  <p><em>그림 1: 3대 시그니처 구종(BULLET, LOB, HOOK)의 60fps 초고화질 실시간 요격 비디오 (4단계 위상 HUD, 탄도 게이지, 듀얼 손목 PiP 연동).</em></p>
 </div>
 
 ---
