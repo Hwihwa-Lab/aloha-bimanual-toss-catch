@@ -40,6 +40,13 @@ class AlohaTossCatchEnv(gym.Env):
         self.body_projectile = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, "projectile")
         self.sensor_touch = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_SENSOR, "sensor_catcher_touch")
 
+        # Collision Geoms for Direct Physics Contact Detection
+        self.proj_geom_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, "projectile_geom")
+        self.basket_geom_ids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, name)
+            for name in ["right_cushion_base", "right_rim_fwd", "right_rim_bwd", "right_rim_left", "right_rim_right"]
+        ]
+
         # Action Space: 16 actuators
         # Left: 7 arm motors + 2 finger positions
         # Right: 7 arm motors
@@ -63,6 +70,24 @@ class AlohaTossCatchEnv(gym.Env):
         self.trajectory_history = []
         self.renderer = None
 
+        # Kinematic Nominal Ballistic Toss Keyframes for Left Arm
+        self.q_left_ready = np.array([0.0, 0.866, 0.0, 2.138, 0.0, 1.050, 0.0], dtype=np.float64)
+        self.q_left_swing = np.array([0.0, 0.450, 0.0, 1.400, 0.0, 0.400, 0.0], dtype=np.float64)
+        self.q_left_release = np.array([0.0, 0.100, 0.0, 0.600, 0.0, 0.050, 0.0], dtype=np.float64)
+
+        # Optimal Upright Facing Catch Pose for Right Arm (Perfect Horizontal Bowl facing UP, Aligned at X=0.35, Z=0.88)
+        self.q_right_catch_nominal = np.array([-0.4873, 1.1973, 0.0992, 2.4, -2.2945, -1.1899, -0.2695], dtype=np.float64)
+        self.cur_q_right_target = self.q_right_catch_nominal.copy()
+        self.cur_q_left_swing = self.q_left_swing.copy()
+        self.cur_q_left_release = self.q_left_release.copy()
+
+        # Action scales (Left: fine residual, Right: active compliant residual intercept)
+        self.action_scale = np.array([
+            0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,  # left arm fine residual
+            0.0, 0.0,                                   # fingers (kinematic timed release)
+            0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08   # right arm compliant residual intercept
+        ], dtype=np.float64)
+
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         self.current_step = 0
@@ -72,63 +97,117 @@ class AlohaTossCatchEnv(gym.Env):
         # Reset MuJoCo physics state
         mujoco.mj_resetData(self.model, self.data)
 
-        # Set default joint poses (Solved Inverse Kinematics for Toss & Catch)
-        # Left Arm initial pose: holding cube at [-0.25, 0.0, 0.88]
-        self.data.qpos[0] = 0.0    # left_waist
-        self.data.qpos[1] = 0.866  # left_shoulder
-        self.data.qpos[2] = 0.0    # left_shoulder_roll
-        self.data.qpos[3] = 2.138  # left_elbow
-        self.data.qpos[4] = 0.0    # left_forearm_roll
-        self.data.qpos[5] = 1.050  # left_wrist_pitch
-        self.data.qpos[6] = 0.0    # left_wrist_roll
-        self.data.qpos[7] = 0.012  # finger1 closed
-        self.data.qpos[8] = 0.012  # finger2 closed
+        # Set default joint poses
+        self.data.qpos[:7] = self.q_left_ready.copy()
+        self.data.qpos[7] = 0.0
+        self.data.qpos[8] = 0.0
+        self.data.qpos[9:16] = self.q_right_catch_nominal.copy()
 
-        # Right Arm initial pose: ready at catching zone [0.25, 0.0, 0.88]
-        self.data.qpos[9] = 0.0    # right_waist
-        self.data.qpos[10] = -0.908 # right_shoulder
-        self.data.qpos[11] = 0.0   # right_shoulder_roll
-        self.data.qpos[12] = -2.176 # right_elbow
-        self.data.qpos[13] = 0.0   # right_forearm_roll
-        self.data.qpos[14] = -1.009 # right_wrist_pitch
-        self.data.qpos[15] = 0.0   # right_wrist_roll
+        # Domain Randomization: Left Arm Variable Toss Angles & Projectile position
+        options = options or {}
+        if "toss_yaw" in options:
+            self.toss_yaw = float(options["toss_yaw"])
+        else:
+            self.toss_yaw = self.np_random.uniform(-0.16, 0.16)   # ±9.2 degrees variable toss
 
-        # Domain Randomization: Projectile position slightly randomized (+- 1cm)
+        if "toss_pitch" in options:
+            self.toss_pitch = float(options["toss_pitch"])
+        else:
+            self.toss_pitch = self.np_random.uniform(-0.015, 0.015)
+        
+        self.cur_q_left_swing = np.array([
+            self.toss_yaw * 0.5, 0.450 + self.toss_pitch * 0.5, 0.0, 1.400, 0.0, 0.400, 0.0
+        ], dtype=np.float64)
+        self.cur_q_left_release = np.array([
+            self.toss_yaw, 0.100 + self.toss_pitch, 0.0, 0.600, 0.0, 0.050, 0.0
+        ], dtype=np.float64)
+        self.cur_q_right_target = self.q_right_catch_nominal.copy()
+
         proj_qpos_start = 16  # index of freejoint qpos
-        noise_x = self.np_random.uniform(-0.01, 0.01)
-        noise_y = self.np_random.uniform(-0.01, 0.01)
-        self.data.qpos[proj_qpos_start + 0] = -0.25 + noise_x  # x
+        noise_x = self.np_random.uniform(-0.003, 0.003)
+        noise_y = self.np_random.uniform(-0.003, 0.003)
+        self.data.qpos[proj_qpos_start + 0] = -0.218 + noise_x  # x
         self.data.qpos[proj_qpos_start + 1] = 0.0 + noise_y    # y
-        self.data.qpos[proj_qpos_start + 2] = 0.88             # z
+        self.data.qpos[proj_qpos_start + 2] = 0.879            # z
         self.data.qpos[proj_qpos_start + 3:proj_qpos_start + 7] = [1.0, 0.0, 0.0, 0.0]
 
         # Zero out velocities
         self.data.qvel[:] = 0.0
 
+        # Initialize position actuator targets to match starting joint poses
+        self.data.ctrl[:7] = self.q_left_ready.copy()
+        self.data.ctrl[7] = 0.0
+        self.data.ctrl[8] = 0.0
+        self.data.ctrl[9:16] = self.q_right_catch_nominal.copy()
+
         # Step forward to stabilize contacts
         mujoco.mj_forward(self.model, self.data)
 
         obs = self._get_obs()
-        info = {"phase": self.reward_engine.current_phase}
+        info = {
+            "phase": self.reward_engine.current_phase,
+            "toss_yaw_deg": float(np.degrees(self.toss_yaw)),
+            "toss_pitch_deg": float(np.degrees(self.toss_pitch))
+        }
         return obs, info
 
     def step(self, action):
         self.current_step += 1
         action = np.clip(action, self.action_space.low, self.action_space.high)
 
-        # Apply action control
-        # Map motor actions: [-1, 1] mapped to ctrl
-        # Note fingers are position actuators: ctrl [0, 0.045]
-        ctrl = np.zeros(self.model.nu, dtype=np.float64)
-        # Arm motors: direct torque scaling
-        ctrl[:7] = action[:7]
-        # Gripper fingers: map [-1, 1] to [0.0, 0.045]
-        ctrl[7] = (action[7] + 1.0) * 0.5 * 0.045
-        ctrl[8] = (action[8] + 1.0) * 0.5 * 0.045
-        # Right Arm motors
-        ctrl[9:16] = action[9:16]
+        # 1. Left Arm Dynamic Variable Toss Generator
+        nominal_ctrl = np.zeros(16, dtype=np.float64)
+        if self.current_step < 4:
+            nominal_ctrl[:7] = self.q_left_ready
+            nominal_ctrl[7] = 0.0
+            nominal_ctrl[8] = 0.0
+        elif self.current_step < 11:
+            u = (self.current_step - 4) / 7.0
+            s = 0.5 * (1.0 - np.cos(u * np.pi))
+            nominal_ctrl[:7] = (1.0 - s) * self.q_left_ready + s * self.cur_q_left_swing
+            nominal_ctrl[7] = 0.0
+            nominal_ctrl[8] = 0.0
+        elif self.current_step < 18:
+            u = (self.current_step - 11) / 7.0
+            s = 0.5 * (1.0 - np.cos(u * np.pi))
+            nominal_ctrl[:7] = (1.0 - s) * self.cur_q_left_swing + s * self.cur_q_left_release
+            nominal_ctrl[7] = 0.045
+            nominal_ctrl[8] = 0.045
+        else:
+            nominal_ctrl[:7] = self.cur_q_left_release
+            nominal_ctrl[7] = 0.045
+            nominal_ctrl[8] = 0.045
 
-        self.data.ctrl[:] = ctrl
+        # 2. Right Arm Active Trajectory Interceptor (Multi-Axis Ballistic Predictor)
+        proj_pos = self.data.site_xpos[self.site_projectile].copy()
+        proj_vel = self.data.qvel[16:19].copy()
+
+        if self.current_step >= 15:  # Airborne tracking phase
+            g = 9.81
+            z_catch = 0.8898
+            vz = proj_vel[2]
+            disc = vz**2 + 2.0 * g * max(0.0, proj_pos[2] - z_catch)
+            if disc >= 0:
+                t_impact = (vz + np.sqrt(disc)) / g
+                pred_x = proj_pos[0] + proj_vel[0] * t_impact
+                pred_y = proj_pos[1] + proj_vel[1] * t_impact
+
+                # Active Interception: Waist tracks Y, Elbow tracks X
+                delta_waist = -pred_y / 0.201
+                delta_elbow = (pred_x - 0.30) / 0.222
+
+                # Update nominal catching pose dynamically toward landing target
+                self.cur_q_right_target[0] = self.q_right_catch_nominal[0] + np.clip(delta_waist, -1.2, 1.2)
+                self.cur_q_right_target[3] = self.q_right_catch_nominal[3] + np.clip(delta_elbow * 0.5, -0.3, 0.3)
+                self.cur_q_right_target[5] = self.q_right_catch_nominal[5] - np.clip(delta_elbow * 0.5, -0.3, 0.3) * 0.5
+
+        nominal_ctrl[9:16] = self.cur_q_right_target
+
+        # 3. Hybrid Nominal + Residual RL Control
+        target_ctrl = nominal_ctrl + action * self.action_scale
+        ctrl_min = self.model.actuator_ctrlrange[:, 0]
+        ctrl_max = self.model.actuator_ctrlrange[:, 1]
+        self.data.ctrl[:] = np.clip(target_ctrl, ctrl_min, ctrl_max)
 
         # Advance physics simulation for frame_skip sub-steps
         for _ in range(self.frame_skip):
@@ -142,9 +221,19 @@ class AlohaTossCatchEnv(gym.Env):
         # Freejoint linear velocity
         proj_vel = self.data.qvel[16:19].copy()
 
-        # Touch sensor check
-        touch_val = self.data.sensordata[0] if self.model.nsensordata > 0 else 0.0
-        has_contact = bool(touch_val > 0.05)
+        # Direct Physics Contact Check via MuJoCo Collision Engine
+        has_contact = False
+        for c_i in range(self.data.ncon):
+            con = self.data.contact[c_i]
+            g1, g2 = con.geom1, con.geom2
+            if (g1 == self.proj_geom_id and g2 in self.basket_geom_ids) or \
+               (g2 == self.proj_geom_id and g1 in self.basket_geom_ids):
+                has_contact = True
+                break
+        
+        # Fallback to site touch sensor if non-zero
+        if not has_contact and self.model.nsensordata > 0:
+            has_contact = bool(self.data.sensordata[0] > 0.05)
 
         # Gripper width
         gripper_w = float(self.data.qpos[7] + self.data.qpos[8])
@@ -167,6 +256,8 @@ class AlohaTossCatchEnv(gym.Env):
         }
 
         reward, reward_info = self.reward_engine.compute(env_data)
+        reward_info["toss_yaw_deg"] = float(np.degrees(self.toss_yaw))
+        reward_info["toss_pitch_deg"] = float(np.degrees(self.toss_pitch))
 
         # Terminations & Truncations
         terminated = False

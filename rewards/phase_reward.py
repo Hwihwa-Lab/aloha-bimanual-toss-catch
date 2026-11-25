@@ -13,13 +13,15 @@ class PhaseRewardEngine:
         # Target locations in world coordinates
         self.toss_launch_pos = np.array([-0.25, 0.0, 0.88])
         self.apex_target_pos = np.array([0.0, 0.0, 1.25])
-        self.catch_target_pos = np.array([0.25, 0.0, 0.88])
+        self.catch_target_pos = np.array([0.35, 0.0, 0.85])
 
         # Phase tracking
         self.current_phase = 0  # 0: GRASP, 1: TOSS, 2: FLIGHT, 3: CATCH
+        self.consecutive_retention = 0  # 바스켓 안착 유지 연속 스텝 수
 
     def reset(self):
         self.current_phase = 0
+        self.consecutive_retention = 0
 
     def compute(self, env_data):
         """
@@ -88,32 +90,45 @@ class PhaseRewardEngine:
                 z_catch
             ])
             dist_to_pred = np.linalg.norm(right_pos - predicted_landing)
-            reward += 4.0 * np.exp(-10.0 * dist_to_pred) + 2.5 * np.exp(-6.0 * dist_catch)
+            reward += 8.0 * np.exp(-12.0 * dist_to_pred) + 5.0 * np.exp(-8.0 * dist_catch)
             
             # Bonus for high arc crossing the apex region
-            if proj_pos[0] > -0.1 and proj_pos[0] < 0.2 and proj_pos[2] > 1.05:
-                reward += 2.0
+            if proj_pos[0] > -0.1 and proj_pos[0] < 0.2 and proj_pos[2] > 1.0:
+                reward += 3.0
 
             # Transition to Catch when projectile approaches catcher pad
             if dist_catch < 0.12 or has_contact:
-                reward += 10.0
+                reward += 20.0
                 self.current_phase = 3  # Transition to Catch
 
+        # Phase 3: Cushion Catch & Sustained Retention (절대 스쳐 지나가는 꼼수 불가)
         elif self.current_phase == 3:
-            # Catch Phase: Contact absorption, damping, retention
-            reward += 5.0 * np.exp(-15.0 * dist_catch)
-            if has_contact:
-                reward += 15.0
-                # Kinetic damping bonus: penalize projectile speed inside catcher
-                proj_speed = np.linalg.norm(proj_vel)
-                reward += 5.0 * np.exp(-3.0 * proj_speed)
+            reward += 10.0 * np.exp(-10.0 * dist_catch)
+            proj_speed = np.linalg.norm(proj_vel)
 
-                if dist_catch < 0.05 and proj_speed < 0.25:
-                    reward += 50.0  # Massive success bonus
+            # 21cm x 22cm 와이드 바스켓 Bounding Box 검증 (X: ±10.5cm, Y: ±11.0cm, Z: 바스켓 바닥 위 -3cm ~ +15cm)
+            dx = abs(proj_pos[0] - right_pos[0])
+            dy = abs(proj_pos[1] - right_pos[1])
+            dz = proj_pos[2] - right_pos[2]
+            in_basket_box = (dx <= 0.11) and (dy <= 0.115) and (-0.03 <= dz <= 0.15)
+
+            # 바스켓 내부에 공이 위치하고 실제 물리적 접촉이 있으며 감속된 경우
+            if in_basket_box and has_contact and (proj_speed < 0.8):
+                self.consecutive_retention += 1
+                reward += 40.0 + 15.0 * np.exp(-2.0 * proj_speed) + 5.0 * self.consecutive_retention
+
+                # 최소 3스텝 연속으로 바스켓 안에 얌전히 머물러야만 100% 정석 성공!
+                if self.consecutive_retention >= 3:
+                    reward += 100.0  # 정석 캐칭 & 안착 성공 보너스
                     info["is_success"] = True
+            else:
+                # 튕겨 나가거나 스쳐 지나가는 경우 카운터 리셋
+                self.consecutive_retention = 0
+                if in_basket_box or has_contact:
+                    reward += 15.0
 
-        # Energy & Jerk Regularization (prevent violent motor shudder)
-        torque_penalty = 0.0005 * np.sum(np.square(torques))
+        # Energy & Jerk Regularization (calibrated for position servo)
+        torque_penalty = 0.000005 * np.sum(np.square(torques))
         reward -= torque_penalty
 
         info["phase"] = self.current_phase

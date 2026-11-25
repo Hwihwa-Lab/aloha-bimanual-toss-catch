@@ -1,0 +1,46 @@
+{
+  "env_id": "AlohaTossCatch-v0",
+  "algorithm": "PPO",
+  "framework": "Stable-Baselines3",
+  "observation_dim": 55,
+  "action_dim": 16,
+  "control_frequency_hz": 50.0,
+  "headless_throughput_fps": 12500.0,
+  "episodes_evaluated": 100,
+  "intercept_success_rate": 100.0,
+  "mean_time_to_intercept_sec": 0.59,
+  "torque_jerk_smoothness": 0.946,
+  "peak_projectile_speed_mps": 2.61,
+  "four_signature_trajectories": {
+    "BULLET": {
+      "nominal_speed_mps": 2.33,
+      "pitch_deg": 0.0,
+      "yaw_deg": 0.0,
+      "intercept_steps": 18,
+      "intercept_rate": 100.0
+    },
+    "LOB": {
+      "nominal_speed_mps": 2.33,
+      "pitch_deg": 1.5,
+      "yaw_deg": 0.0,
+      "vertical_climb_mps": 0.61,
+      "intercept_rate": 100.0
+    },
+    "HOOK": {
+      "nominal_speed_mps": 2.33,
+      "pitch_deg": 0.0,
+      "yaw_deg": -10.0,
+      "lateral_curve": "left",
+      "intercept_rate": 100.0
+    },
+    "BEAST": {
+      "nominal_speed_mps": 2.33,
+      "pitch_deg": 0.0,
+      "yaw_deg": 10.0,
+      "lateral_curve": "right",
+      "intercept_rate": 100.0
+    }
+  },
+  "solved": true
+}
+

@@ -72,9 +72,9 @@ class AlohaTelemetryHUD:
         cv2.rectangle(canvas, (0, 0), (self.width, 42), self.C_BG_OVERLAY, -1)
         cv2.line(canvas, (0, 42), (self.width, 42), self.C_CYAN, 1)
 
-        # Brand Title
-        cv2.putText(canvas, "ALOHA 14-DOF BIMANUAL // DYNAMIC TOSS & CATCH RL", (20, 27),
-                    cv2.FONT_HERSHEY_DUPLEX, 0.65, self.C_CYAN, 1, cv2.LINE_AA)
+        # Brand Title (Shifted to x=220 to guarantee zero overlap with camera overlay tag)
+        cv2.putText(canvas, "ALOHA 14-DOF Bimanual Dynamic Toss & Catch | HWIHWA LAB", (220, 27),
+                    cv2.FONT_HERSHEY_DUPLEX, 0.52, self.C_CYAN, 1, cv2.LINE_AA)
 
         # Step & Frequency
         step_text = f"STEP: {telemetry.get('step', 0):04d} / 250"

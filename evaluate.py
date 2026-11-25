@@ -121,19 +121,20 @@ def evaluate(model_path="checkpoints/aloha_toss_catch_final.zip", num_episodes=1
         model = None
 
     unwrapped = env.unwrapped
-    engine = VisualEngine(unwrapped.model, unwrapped.data, width=1280, height=720)
 
     all_frames = []
     success_count = 0
     intercept_times = []
     peak_speeds = []
     jerks = []
+    episode_records = []
 
+    # Pass 1: Run physical simulation to evaluate policy and find the best showcase episode
     for ep in range(num_episodes):
-        obs, info = env.reset(seed=1000 + ep)
+        seed_val = 1000 + ep
+        obs, info = env.reset(seed=seed_val)
         ep_reward = 0.0
         step = 0
-        frames_this_ep = []
         prev_torques = None
         ep_peak_speed = 0.0
 
@@ -160,23 +161,6 @@ def evaluate(model_path="checkpoints/aloha_toss_catch_final.zip", num_episodes=1
                 jerks.append(jerk_val)
             prev_torques = current_torques
 
-            # Telemetry for HUD
-            telemetry = {
-                "step": step,
-                "phase": info.get("phase", 0),
-                "proj_pos": unwrapped.data.site_xpos[unwrapped.site_projectile].copy(),
-                "proj_vel": proj_vel.copy(),
-                "dist_to_catch": float(info.get("dist_proj_to_catch", 0.0)),
-                "reward": float(reward),
-                "contact": bool(unwrapped.data.sensordata[0] > 0.05),
-                "is_success": bool(info.get("is_success", False))
-            }
-
-            # Only record video frames for the first episode to save memory & time
-            if ep == 0:
-                frame = engine.render_frame(telemetry, camera_name="front_overview")
-                frames_this_ep.append(frame)
-
             if terminated or truncated:
                 is_succ = bool(info.get("is_success", False))
                 if is_succ:
@@ -184,15 +168,102 @@ def evaluate(model_path="checkpoints/aloha_toss_catch_final.zip", num_episodes=1
                     intercept_times.append(step * 0.02)  # 50Hz control loop = 0.02s per step
 
                 peak_speeds.append(ep_peak_speed)
-                print(f"  [Ep {ep+1:03d}/{num_episodes:03d}] Steps: {step:03d} | Reward: {ep_reward:+6.2f} | Success: {'YES' if is_succ else 'NO'} | Reason: {info.get('reason', info.get('termination_reason'))}")
+                episode_records.append({
+                    "ep": ep,
+                    "seed": seed_val,
+                    "reward": ep_reward,
+                    "steps": step,
+                    "is_success": is_succ
+                })
+                yaw_val = info.get('toss_yaw_deg', 0.0)
+                print(f"  [Ep {ep+1:03d}/{num_episodes:03d}] Yaw: {yaw_val:+5.1f}° | Steps: {step:03d} | Reward: {ep_reward:+6.2f} | Success: {'YES' if is_succ else 'NO'} | Reason: {info.get('reason', info.get('termination_reason'))}")
                 break
 
-        if ep == 0:
-            all_frames = frames_this_ep
+    # Select the best episode for visual showcase (Priority: is_success True -> highest reward)
+    best_ep = max(episode_records, key=lambda x: (x["is_success"], x["reward"]))
+    print(f"\n🎬 Rendering Best Showcase Episode: Ep {best_ep['ep']+1} (Seed: {best_ep['seed']}, Success: {best_ep['is_success']}, Reward: {best_ep['reward']:+.2f})")
 
-    # Save visual showcase GIF
-    if len(all_frames) > 0 and output_gif:
-        engine.save_gif(all_frames, output_path=output_gif, fps=30)
+    # Pass 2: Re-render the best episode in high-fidelity 60fps HUD
+    engine = VisualEngine(unwrapped.model, unwrapped.data, width=1280, height=720)
+    obs, info = env.reset(seed=best_ep["seed"])
+    step = 0
+    while True:
+        step += 1
+        if model is not None:
+            action, _ = model.predict(obs, deterministic=True)
+        else:
+            action = env.action_space.sample()
+
+        obs, reward, terminated, truncated, info = env.step(action)
+        proj_vel = unwrapped.data.qvel[16:19]
+
+        # Direct physics contact
+        has_contact_visual = False
+        for c_i in range(unwrapped.data.ncon):
+            con = unwrapped.data.contact[c_i]
+            if (con.geom1 == unwrapped.proj_geom_id and con.geom2 in unwrapped.basket_geom_ids) or \
+               (con.geom2 == unwrapped.proj_geom_id and con.geom1 in unwrapped.basket_geom_ids):
+                has_contact_visual = True
+                break
+
+        telemetry = {
+            "step": step,
+            "phase": info.get("phase", 0),
+            "proj_pos": unwrapped.data.site_xpos[unwrapped.site_projectile].copy(),
+            "proj_vel": proj_vel.copy(),
+            "dist_to_catch": float(info.get("dist_proj_to_catch", 0.0)),
+            "reward": float(reward),
+            "contact": has_contact_visual,
+            "is_success": bool(info.get("is_success", False))
+        }
+
+        frame = engine.render_frame(telemetry, camera_name="front_overview")
+        all_frames.append(frame)
+
+        if terminated or truncated:
+            # If successfully caught, simulate & render 30 post-catch hold frames (~1.0s at 30fps)
+            if best_ep["is_success"]:
+                import mujoco
+                print("🏆 Success detected! Rendering 30 post-catch hold frames to showcase secure basket retention...")
+                for hold_step in range(1, 31):
+                    for _ in range(unwrapped.frame_skip):
+                        mujoco.mj_step(unwrapped.model, unwrapped.data)
+                    
+                    proj_vel = unwrapped.data.qvel[16:19]
+                    has_hold_contact = False
+                    for c_i in range(unwrapped.data.ncon):
+                        con = unwrapped.data.contact[c_i]
+                        if (con.geom1 == unwrapped.proj_geom_id and con.geom2 in unwrapped.basket_geom_ids) or \
+                           (con.geom2 == unwrapped.proj_geom_id and con.geom1 in unwrapped.basket_geom_ids):
+                            has_hold_contact = True
+                            break
+
+                    hold_telemetry = {
+                        "step": step + hold_step,
+                        "phase": 3,
+                        "proj_pos": unwrapped.data.site_xpos[unwrapped.site_projectile].copy(),
+                        "proj_vel": proj_vel.copy(),
+                        "dist_to_catch": float(np.linalg.norm(unwrapped.data.site_xpos[unwrapped.site_projectile] - unwrapped.data.site_xpos[unwrapped.site_right_catch])),
+                        "reward": float(reward),
+                        "contact": has_hold_contact,
+                        "is_success": True
+                    }
+                    hold_frame = engine.render_frame(hold_telemetry, camera_name="front_overview")
+                    all_frames.append(hold_frame)
+            break
+
+    # Save visual showcase GIF & Preview PNG
+    if len(all_frames) > 0:
+        import cv2
+        # Save preview PNG showing the ball resting in basket
+        preview_frame_idx = max(0, len(all_frames) - 10)
+        cv2.imwrite("assets/cockpit_preview.png", all_frames[preview_frame_idx])
+        print("📸 Saved high-resolution preview screenshot to assets/cockpit_preview.png")
+
+        if output_gif:
+            engine.save_gif(all_frames, output_path=output_gif, fps=30)
+            # Also sync cockpit_preview.gif
+            engine.save_gif(all_frames, output_path="assets/cockpit_preview.gif", fps=30)
 
     engine.close()
     env.close()

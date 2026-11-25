@@ -1,0 +1,13 @@
+.git
+.gitignore
+.cursor
+.cursorrules*
+.agents
+DOCS_*
+MEMORY.md
+scratch
+aloha_bimanual_toss_catch_bundle.zip
+__pycache__
+*.pyc
+*.tmp
+

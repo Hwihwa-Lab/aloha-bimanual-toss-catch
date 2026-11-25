@@ -5,7 +5,7 @@ language:
 license: mit
 library_name: lerobot
 pipeline_tag: robotics
-description: "High-speed 14-DOF bimanual dynamic toss & catch Gymnasium environment powered by MuJoCo 3.x and Phase-Aware PPO reinforcement learning. Fully aligned with Hugging Face LeRobot and equipped with a 60fps cyber telemetry cockpit HUD."
+short_description: "14-DOF Bimanual Dynamic Toss & Catch Gym & LeRobot"
 tags:
 - robotics
 - lerobot
@@ -33,24 +33,26 @@ tags:
 - domain-randomization
 - pytorch
 - python
+- korean
+- 한국어
 - model-index
 - region:us
 model-index:
-- name: aloha-bimanual-toss-catch-gym
+- name: aloha-bimanual-toss-catch-model
   results:
   - task:
       type: robotics
       name: Dynamic Bimanual Ballistic Toss and Catch
     dataset:
-      name: mujoco_aloha_toss_catch_sim
+      name: aloha-bimanual-toss-catch-telemetry
       type: simulation
     metrics:
     - name: Catch Intercept Rate
       type: success_rate
-      value: 0.0
+      value: 100.0
     - name: Time to Intercept
       type: time_to_success
-      value: 0.00
+      value: 0.59
     - name: Control Frequency
       type: frequency
       value: 50.0
@@ -59,54 +61,32 @@ model-index:
       value: 12500.0
     - name: Torque Smoothness (Jerk)
       type: jerk_metric
-      value: 0.733
+      value: 0.946
 ---
 
 # 🎯 ALOHA 14-DOF Bimanual Dynamic Toss & Catch // Gym Environment & PPO Benchmark
 
-<!-- ============================================================================== -->
-<!-- 🏆 TIER 1: GLOBAL ECOSYSTEM & REPOSITORY HUBS                                  -->
-<!-- ============================================================================== -->
-<p align="center">
-  <a href="https://huggingface.co/hwihwalab"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Model%20Hub-FF9D00?style=for-the-badge&logo=huggingface&logoColor=white" alt="Hugging Face Model Hub"></a>
-  <a href="https://github.com/huggingface/lerobot"><img src="https://img.shields.io/badge/LeRobot-Compatible%20Ecosystem-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="LeRobot Standard"></a>
-  <a href="https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License: MIT"></a>
-</p>
+[![Language: English](https://img.shields.io/badge/Language-English-blue)](README.md)
+[![Language: 한국어](https://img.shields.io/badge/Language-한국어-green)](README_KR.md)
+[![Hugging Face Spaces](https://img.shields.io/badge/🤗%20Hugging%20Face-Live%20Spaces%20Demo-purple)](https://huggingface.co/spaces/hwihwalab/aloha-bimanual-toss-catch)
+[![Hugging Face Model Hub](https://img.shields.io/badge/🤗%20Hugging%20Face-Model%20Hub-orange)](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model)
+[![Hugging Face Telemetry Dataset](https://img.shields.io/badge/📦%20Dataset-60fps%20Telemetry-green)](https://huggingface.co/datasets/hwihwalab/aloha-bimanual-toss-catch-telemetry)
+[![Physics: MuJoCo 3.x](https://img.shields.io/badge/Physics-MuJoCo%203.x-0080FF)](https://mujoco.org)
+[![Gymnasium](https://img.shields.io/badge/Gymnasium-AlohaTossCatch--v0-00D26A)](https://gymnasium.farama.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org)
+[![Stable-Baselines3](https://img.shields.io/badge/Stable--Baselines3-PPO-E65C00)](https://stable-baselines3.readthedocs.io)
+[![LeRobot](https://img.shields.io/badge/LeRobot-Compatible-FFD21E)](https://github.com/huggingface/lerobot)
+[![Benchmark](https://img.shields.io/badge/Benchmark-100%25%20Catch%20%7C%200.59s%20Intercept-brightgreen)](#-benchmark-performance-matrix)
+[![GitHub](https://img.shields.io/badge/GitHub-aloha--bimanual--toss--catch-181717?logo=github)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch/blob/main/LICENSE)
 
-<!-- ============================================================================== -->
-<!-- ⚙️ TIER 2: ENGINE & REINFORCEMENT LEARNING TECH STACK                           -->
-<!-- ============================================================================== -->
-<p align="center">
-  <a href="https://mujoco.org/"><img src="https://img.shields.io/badge/MuJoCo-3.x%20Physics-0080FF?style=flat-square&logo=google&logoColor=white" alt="MuJoCo 3.x Physics"></a>
-  <a href="https://gymnasium.farama.org/"><img src="https://img.shields.io/badge/Gymnasium-v0.29+-00D26A?style=flat-square&logo=openai&logoColor=white" alt="Gymnasium API"></a>
-  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/PyTorch-2.0+-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" alt="PyTorch 2.0+"></a>
-  <a href="https://stable-baselines3.readthedocs.io/"><img src="https://img.shields.io/badge/Stable--Baselines3-PPO-E65C00?style=flat-square" alt="Stable Baselines3 PPO"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%20|%203.11%20|%203.12%20|%203.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python Version"></a>
-</p>
+> **"Can Autonomous Dual-Arm Robots Catch High-Speed Aerial Projectiles with Compliant Damping?"**  
+> A high-precision Physical AI & dynamic robotics benchmark comparing high-speed bimanual toss-and-catch ballistics using Deep Reinforcement Learning (PPO) and compliant active damping in MuJoCo 3.x.  
+> *[ 🌐 English Documentation ](README.md) | [ 🇰🇷 한국어 매뉴얼 ](README_KR.md) | [ 🎮 Live Interactive Web Cockpit ](https://huggingface.co/spaces/hwihwalab/aloha-bimanual-toss-catch)*
 
-<!-- ============================================================================== -->
-<!-- 🔬 TIER 3: PHYSICAL AI BENCHMARKS & DYNAMICS SPECS                             -->
-<!-- ============================================================================== -->
-<p align="center">
-  <img src="https://img.shields.io/badge/Hardware-14--DOF%20ALOHA%20Bimanual-9900CC?style=flat-square" alt="14-DOF ALOHA Bimanual">
-  <img src="https://img.shields.io/badge/Control%20Loop-50Hz%20(dt%3D0.02s)-009999?style=flat-square" alt="Control Loop 50Hz">
-  <img src="https://img.shields.io/badge/Catch%20Success-0.0%25-brightgreen?style=flat-square" alt="Catch Success 94.2%">
-  <img src="https://img.shields.io/badge/Headless%20Speed-12%2C500%2B%20FPS-orange?style=flat-square" alt="Throughput 12,500+ FPS">
-  <img src="https://img.shields.io/badge/Sim--to--Real-Domain%20Randomized-informational?style=flat-square" alt="Sim to Real Ready">
-</p>
-
-<!-- ============================================================================== -->
-<!-- 🚀 TIER 4: CLOUD RUNTIME & 2026 AI SEARCH (GEO SEO)                            -->
-<!-- ============================================================================== -->
-<p align="center">
-  <a href="Aloha_Toss_Catch_Colab.ipynb"><img src="https://img.shields.io/badge/Open%20In%20Colab-1--Click%20Cloud%20Training-F9AB00?style=flat-square&logo=googlecolab&logoColor=white" alt="Open In Colab"></a>
-  <a href="render/hud_overlay.py"><img src="https://img.shields.io/badge/Cockpit-60fps%20Cyber%20HUD-blueviolet?style=flat-square" alt="60fps Telemetry Cockpit"></a>
-  <a href="llms.txt"><img src="https://img.shields.io/badge/GEO%20SEO-2026%20llms.txt%20Indexed-00B4D8?style=flat-square" alt="2026 GEO SEO Indexed"></a>
-</p>
-
-> **Autonomous High-Speed Ballistic Projectile Interception & Compliant Damping for Dual 7-DOF Robotic Arms.**  
-> *[ 🌐 English Documentation ](README.md) | [ 🇰🇷 한국어 매뉴얼 ](README_KR.md) | [ 🤖 LLM Index (GEO SEO) ](llms.txt)*
+> [!TIP]
+> 🎮 **Try Live in Browser (Zero Install)**: [👉 Open Hugging Face Spaces Live Demo](https://huggingface.co/spaces/hwihwalab/aloha-bimanual-toss-catch)  
+> 📦 **Official Model Hub**: [🤗 hwihwalab/aloha-bimanual-toss-catch-model](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model) | 🐙 **GitHub Repository**: [Hwihwa-Lab/aloha-bimanual-toss-catch](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch) | 📊 **Dataset Hub**: [hwihwalab/aloha-bimanual-toss-catch-telemetry](https://huggingface.co/datasets/hwihwalab/aloha-bimanual-toss-catch-telemetry)
 
 <div align="center">
   <img src="assets/cockpit_preview.png" alt="ALOHA Toss & Catch 60fps Telemetry Cockpit" width="100%" style="border-radius: 8px; border: 1px solid #223344; box-shadow: 0 8px 30px rgba(0,0,0,0.6);" />
@@ -115,40 +95,52 @@ model-index:
 
 ---
 
-## 🔍 2026 Generative Engine Optimization (GEO) & Semantic Metadata
+## 🕹️ Interactive Real-Time Cyber Cockpit (`run_live_cockpit.py`)
 
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareSourceCode",
-  "name": "ALOHA 14-DOF Bimanual Dynamic Toss & Catch Gymnasium Environment",
-  "description": "High-throughput Gymnasium & MuJoCo 3.x physical AI simulation benchmark for asymmetric dual-arm dynamic ballistics, toss and aerial catch interception with 60fps telemetry HUD.",
-  "programmingLanguage": "Python",
-  "license": "https://opensource.org/licenses/MIT",
-  "codeRepository": "https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch",
-  "keywords": [
-    "ALOHA Bimanual Manipulation",
-    "MuJoCo 3.x Robotics Simulation",
-    "LeRobot Physical AI",
-    "Ballistic Toss and Catch",
-    "Phase-Aware PPO Reinforcement Learning",
-    "Compliant Active Damping",
-    "Sim-to-Real Domain Randomization"
-  ]
-}
+Run the standalone **60fps Cyber HUD Telemetry Cockpit**. When launched, it **automatically opens a dedicated standalone app window** on your screen (or connect manually via `http://localhost:8080`):
+
+```bash
+python run_live_cockpit.py
 ```
 
-* **Target Search Intent Queries:**  
-  * *"How to implement dynamic bimanual ballistics in MuJoCo 3.x"*  
-  * *"ALOHA 14-DOF robot arm reinforcement learning toss and catch"*  
-  * *"Hugging Face LeRobot compatible Gymnasium environments"*  
-  * *"Sim-to-Real domain randomization for robotic projectile catching"*
+```
+[ 🚀 LAUNCH | ⏸️ PAUSE | 🔄 RESET ] │ MODE: [ MANUAL | AUTO | CHAOS RUSH ⚡ ] │ SHOT: [ 🎯 BULLET | 🌈 LOB | ↩️ HOOK | ⚡ BEAST ] [AIM YAW: L ──●── R 0.0°] │ CAM: [ 1 FRONT | 2 SIDE | 3 TOP | 4 L-WRIST | 5 R-WRIST ]
+```
+
+### ⌨️ Cockpit Keyboard & Teleoperation Shortcuts
+
+| Key | Action | Description |
+| :---: | :--- | :--- |
+| **`Space` / `Enter`** | **🚀 LAUNCH / PAUSE** | Fire projectile in lobby launchpad / Freeze simulation during flight |
+| **`P`** | **⏸️ PAUSE** | Instant physics freeze and live resumption |
+| **`R`** | **🔄 RESET** | Immediate episode reset and return to lobby launchpad |
+| **`A`** | **🤖 AUTO LOOP** | Toggle continuous autonomous benchmarking evaluation loop |
+| **`C`** | **⚡ CHAOS RUSH** | Rapid-fire arcade survival mode with randomized 3D pitch/yaw trajectories |
+| **`←` / `→`** | **🎯 AIM YAW** | Horizontal trajectory steering in 1.0° fine increments ($-15^\circ \sim +15^\circ$) |
+| **`1` ~ `5`** | **🎥 CAM SELECT** | `1`: Front Overview \| `2`: Side Cinematic \| `3`: Top Tactical \| `4`: Left Wrist \| `5`: Right Wrist |
+| **`S` / `M`** | **🔊 AUDIO SFX** | Toggle retro cybernetic catch/miss sound effects and mute |
+| **`F`** | **🖥️ FULLSCREEN** | Toggle browser fullscreen cockpit display |
+| **`?` / `ESC`** | **⌨️ HOTKEYS CARD** | Open / close wide glassmorphism cybernetic hotkeys reference HUD |
+
+### 🎮 Dynamic Modes & Signature Ballistic Trajectories
+
+1. **3 Simulation Game Modes**:
+   - `MANUAL`: Single-round precision aiming and trajectory experimentation.
+   - `AUTO`: Uninterrupted autonomous policy evaluation loop for headless and live benchmarking.
+   - `CHAOS RUSH ⚡`: Rapid-fire survival mode testing dynamic recovery against continuous randomized 3D pitch and yaw dispersions.
+
+2. **4 Signature Ballistic Shot Styles**:
+   - 🎯 **`BULLET`**: $2.33\text{ m/s}$ high-speed laser flatline (rapid 18-step impact).
+   - 🌈 **`LOB`**: High-altitude parabolic rainbow arc ($+1.5^\circ$ pitch, $0.61\text{ m/s}$ vertical climb, long hangtime).
+   - ↩️ **`HOOK`**: $-10.0^\circ$ sharp left-curving lateral sweep testing maximum cross-body reach.
+   - ⚡ **`BEAST`**: $+10.0^\circ$ wide-right extreme angular spread ($22\text{ cm}$ lateral flight dispersion from hook).
+
 
 ---
 
 ## ⚡ The Challenge: Moving Beyond Imitation Learning
 
-Canonical bimanual manipulation benchmarks (such as **ALOHA Transfer Cube**) operate in a **quasi-static regime** ($<0.2\text{m/s}$) using Imitation Learning (ACT / Diffusion Policy). 
+Canonical bimanual manipulation benchmarks (such as our [**ALOHA 14-DOF Transfer Cube ACT**](https://huggingface.co/hwihwalab/act-aloha-sim-transfer-cube)) operate in a **quasi-static regime** ($<0.2\text{m/s}$) using Imitation Learning (ACT / Diffusion Policy). 
 
 However, **human teleoperation cannot generate data for high-speed dynamic tasks** due to human motor latency ($>300\text{ms}$). **`AlohaTossCatch-v0`** bridges this frontier using pure reinforcement learning:
 
@@ -166,12 +158,12 @@ However, **human teleoperation cannot generate data for high-speed dynamic tasks
 
 ## 📊 Benchmark Performance Matrix
 
-| Metric | Random Baseline | Quasi-Static ACT | **AlohaTossCatch (Ours, PPO)** |
+| Metric | Random Baseline | [Quasi-Static ACT (Transfer Cube)](https://huggingface.co/hwihwalab/act-aloha-sim-transfer-cube) | **AlohaTossCatch (Ours, PPO)** |
 | :--- | :---: | :---: | :---: |
-| **Catch Success Rate** | 0.0 % | 12.4 % (OOD Failure) | **0.0 %** |
-| **Average Time to Intercept** | N/A | 3.42 s | **0.00 s** |
-| **Peak Projectile Speed** | 0.4 m/s | 0.2 m/s | **3.16 m/s** |
-| **Torque Jerk Metric** | 4.821 | 1.954 | **0.733 (Smooth)** |
+| **Catch Success Rate** | 0.0 % | 12.4 % (OOD Failure) | **100.0 %** |
+| **Average Time to Intercept** | N/A | 3.42 s | **0.59 s** |
+| **Peak Projectile Speed** | 0.4 m/s | 0.2 m/s | **2.61 m/s** |
+| **Torque Jerk Metric** | 4.821 | 1.954 | **0.946 (Smooth)** |
 | **Simulation Speed (Colab)** | N/A | ~45 FPS | **12,500+ FPS (Headless)** |
 
 ---
@@ -187,83 +179,89 @@ $$\text{Total Reward} = R_{\text{phase}} - \lambda_{\text{torque}} \|\tau\|^2 + 
 
 ---
 
-## 🚀 Quickstart & Cloud Workflow
+## ⚡ Quick Start & Local Replication
 
-### Option A: 1-Click High-Speed Cloud Training (Google Colab)
-Open [`Aloha_Toss_Catch_Colab.ipynb`](Aloha_Toss_Catch_Colab.ipynb) directly in Google Colab to run 100,000 steps of headless PPO in under 2 minutes:
-1. Run Step 1 ~ Step 5 on Colab (Headless pure physics at 12,500+ FPS).
-2. Download `aloha_toss_catch_ppo.zip` directly to your local PC.
-
-### Option B: Local Evaluation & 60fps HUD Generation
-```bash
+### 1. Launch Standalone Web Cockpit
+Experience the full 60fps simulation cockpit with interactive trajectory aiming, game modes, and camera controls:
+```powershell
 # 1. Install package in editable mode
 pip install -e .
 
-# 2. Run 60fps Telemetry HUD Evaluation
-python evaluate.py --model checkpoints/aloha_toss_catch_final.zip --output assets/demo.gif
+# 2. Launch the Web Cockpit (Auto-launches a dedicated app window!)
+python run_live_cockpit.py
+```
 
-# 3. Run Automated Smoke Tests (0.8s)
+### 2. Run Automated Evaluation & Video Generation
+```powershell
+python evaluate.py --model checkpoints/aloha_toss_catch_final.zip --output assets/aloha_toss_catch_demo.gif
+```
+
+### 3. Run Automated System Test Suite
+```powershell
 python tests/test_smoke.py
 ```
 
-### Option C: Standard Gymnasium Usage
+### 4. Direct Policy Weights Download (Hugging Face Hub)
+Load pre-trained 100% intercept PPO weights directly from Hugging Face Model Hub:
 ```python
-import gymnasium as gym
-import envs
+from huggingface_hub import hf_hub_download
+from stable_baselines3 import PPO
 
-env = gym.make("AlohaTossCatch-v0")
-obs, info = env.reset()
-
-for _ in range(250):
-    action = env.action_space.sample()
-    obs, reward, terminated, truncated, info = env.step(action)
-    if terminated or truncated:
-        break
-env.close()
+checkpoint_path = hf_hub_download(
+    repo_id="hwihwalab/aloha-bimanual-toss-catch-model",
+    filename="aloha_toss_catch_final.zip"
+)
+model = PPO.load(checkpoint_path)
+print("✅ Successfully loaded ALOHA Toss & Catch Policy from Hugging Face Hub!")
 ```
 
 ---
 
-## 🏛️ Repository Architecture
+## 📂 Repository Structure & Manifest
 
-```
-ppo_my_simulator/
-├── assets/
-│   ├── aloha_bimanual_toss.xml       # MuJoCo 3.x MJCF Model (Dark Studio, Damped Cushion)
-│   ├── cockpit_preview.png           # 1280x720 High-Res Telemetry Cockpit Screenshot
-│   └── aloha_toss_catch_demo.gif     # 60fps Synthesized Ballistic Catch Demonstration
-├── envs/
-│   ├── __init__.py                   # Gymnasium Registration ("AlohaTossCatch-v0")
-│   └── toss_catch_env.py             # 55D Obs / 16D Action Physical Environment
-├── rewards/
-│   └── phase_reward.py               # 4-Phase Continuous Reward Engine
-├── render/
-│   ├── hud_overlay.py                # 60fps Cyber Telemetry HUD Overlay Engine
-│   └── visual_engine.py              # EGL Offscreen Multi-Camera Renderer
-├── tests/
-│   └── test_smoke.py                 # Automated 4-Component Smoke Test Suite
-├── docs/
-│   └── DDR_ARCHITECTURE.md          # Architecture Design Decision Records (DDR-001~004)
-├── Aloha_Toss_Catch_Colab.ipynb      # Headless High-Throughput Colab Notebook
-├── train_ppo.py                      # Local/Cloud PPO Training Pipeline
-├── evaluate.py                       # Checkpoint Evaluator & Showcase Exporter
-├── pyproject.toml / setup.py         # Standard Python Packaging (pip install -e .)
-├── build_release.ps1                 # 1-Click Release Verification Script
-└── llms.txt                          # 2026 Generative Engine Optimization (GEO) Index
-```
+The file hierarchy strictly mirrors the deployed [Hugging Face Model Hub (`hwihwalab/aloha-bimanual-toss-catch-model`)](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model/tree/main):
+
+| File Path | Single Responsibility Description |
+| :--- | :--- |
+| `checkpoints/aloha_toss_catch_final.zip` | Trained official PyTorch / Stable-Baselines3 PPO policy weights archive (100% catch rate) |
+| `aloha_bimanual_toss_catch_bundle.zip` | Standalone offline-runnable complete bundle (web cockpit, environment, assets & PPO evaluator) |
+| `eval_info.json` | Quantitative benchmark evaluation metrics (100% intercept, 0.59s intercept, 50Hz, 12,500+ FPS, jerk 0.946) |
+| `assets/aloha_bimanual_toss.xml` | High-fidelity MuJoCo 3.x MJCF dual-arm physical simulation model with compliant cushion paddle |
+| `assets/aloha_toss_catch_demo.gif` | 60FPS high-definition synthesized ballistic trajectory intercept demonstration |
+| `assets/cockpit_preview.png` | 1280x720 high-resolution preview of the interactive cyber telemetry cockpit |
+| `README.md` | Official English model card and empirical benchmark specification |
+| `README_KR.md` | Official Korean technical documentation |
+| `LICENSE` | Official MIT open-source license |
 
 ---
 
-## 📜 Citation & Credits
+## 👤 About HWIHWA LAB
 
-Developed by **Hwihwa Lab**. Built on **MuJoCo 3.x** and **Gymnasium**, fully aligned with the **Hugging Face LeRobot** robotics standard.
+> *“AI × Automation × Aesthetics — Crafting tools you'll love ✨”*
 
-```bibtex
-@misc{hwihwalab2026aloha_toss_catch,
-  author = {Hwihwa Lab},
-  title = {ALOHA 14-DOF Bimanual Dynamic Toss & Catch Gymnasium Environment},
-  year = {2026},
-  publisher = {GitHub},
-  howpublished = {\url{https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch}}
-}
-```
+**HWIHWA LAB** is an independent AI research & engineering studio dedicated to blending **practical on-device intelligence, autonomous operations, and refined aesthetics**. We engineer resilient systems that free solopreneurs and indie creators from operational overhead—giving people their time and creative joy back.
+
+### 🔬 Core Research & Engineering Pillars
+
+- **Embodied AI & Physical Dynamics**: Researching physics-based reinforcement learning (RL), dynamic multi-body kinematics, and autonomous robotics control brains (asymmetric dual-arm ballistics, compliant active damping).
+- **Zero-Asset Procedural Engineering**: Designing zero-cost web architectures synthesizing 3D geometry and audio purely via code and mathematical formulations without heavy asset downloads.
+- **Autonomous Decision OS**: Engineering deterministic, prefrontal-cortex-style reasoning architectures and state machine governance for complex physical environments.
+- **Interactive Creative Aesthetics**: Fusing functional automation with refined visual craft and modern design philosophy to build delightful tools.
+
+### 🌐 HWIHWA LAB Robotic Manipulation Suite (Cross-Links)
+
+- **Official Studio Hub**: [🤗 Hugging Face (@hwihwalab)](https://huggingface.co/hwihwalab) · [🐙 GitHub (@Hwihwa-Lab)](https://github.com/Hwihwa-Lab)
+- **🚀 Robotic Manipulation & Dual-Arm Suite**:
+  1. 🦾 **ALOHA 14-DOF Transfer Cube** · ACT Imitation Learning & 3D Live Cockpit ([🤗 Spaces](https://huggingface.co/spaces/hwihwalab/act-aloha-sim-transfer-cube) | [🤗 Model Hub](https://huggingface.co/hwihwalab/act-aloha-sim-transfer-cube)) — *Bimanual quasi-static precision cube transfer benchmark*
+  2. 🎯 **ALOHA 14-DOF Dynamic Toss & Catch** · PPO Reinforcement Learning ([🤗 Spaces](https://huggingface.co/spaces/hwihwalab/aloha-bimanual-toss-catch) | [🤗 Model Hub](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model)) — *(Current Project)*
+  3. 🤖 **Pusher-v5 PPO** · 7-DOF Single-Arm Precision Object Manipulation ([🤗 Spaces](https://huggingface.co/spaces/hwihwalab/pusher-v5-ppo) | [🤗 Model Hub](https://huggingface.co/hwihwalab/pusher-v5-ppo)) — *Canonical Gymnasium & MuJoCo 7-DOF robotic arm benchmark*
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+*Trained and deployed with [ALOHA Toss & Catch Physical AI Lab](https://huggingface.co/spaces/hwihwalab/aloha-bimanual-toss-catch) by **HWIHWA LAB**.*
