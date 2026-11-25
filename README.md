@@ -78,7 +78,7 @@ model-index:
 [![LeRobot](https://img.shields.io/badge/LeRobot-Compatible-FFD21E)](https://github.com/huggingface/lerobot)
 [![Benchmark](https://img.shields.io/badge/Benchmark-100%25%20Catch%20%7C%200.59s%20Intercept-brightgreen)](#-benchmark-performance-matrix)
 [![GitHub](https://img.shields.io/badge/GitHub-aloha--bimanual--toss--catch-181717?logo=github)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch/blob/main/LICENSE)
 
 > **"Can Autonomous Dual-Arm Robots Catch High-Speed Aerial Projectiles with Compliant Damping?"**  
 > A high-precision Physical AI & dynamic robotics benchmark comparing high-speed bimanual toss-and-catch ballistics using Deep Reinforcement Learning (PPO) and compliant active damping in MuJoCo 3.x.  
@@ -260,7 +260,7 @@ The file hierarchy strictly mirrors the deployed [Hugging Face Model Hub (`hwihw
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch/blob/main/LICENSE) file for details.
 
 ---
 

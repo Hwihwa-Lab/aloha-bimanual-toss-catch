@@ -78,7 +78,7 @@ model-index:
 [![LeRobot](https://img.shields.io/badge/LeRobot-호환%20생태계-FFD21E)](https://github.com/huggingface/lerobot)
 [![Benchmark](https://img.shields.io/badge/벤치마크-100%25%20요격%20%7C%200.59초%20도달-brightgreen)](#-정량적-벤치마크-성능-비교-매트릭스)
 [![GitHub](https://img.shields.io/badge/GitHub-aloha--bimanual--toss--catch-181717?logo=github)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch/blob/main/LICENSE)
 
 > **"자율 듀얼암 로봇은 초고속 공중 비행체를 능동 감쇠로 완충 캐칭할 수 있는가?"**  
 > 심층 강화학습(PPO)과 능동 감쇠 완충 제어를 결합하여 고속 양팔 탄도 투척 및 공중 요격을 실증하는 MuJoCo 3.x 기반 고정밀 피지컬 AI 로보틱스 벤치마크.  
@@ -260,7 +260,7 @@ print("✅ Hugging Face Model Hub로부터 ALOHA 정책 가중치 로드 성공!
 
 ## 📄 라이선스 (License)
 
-본 프로젝트는 MIT License를 따릅니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+본 프로젝트는 MIT License를 따릅니다. 자세한 내용은 [LICENSE](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch/blob/main/LICENSE) 파일을 참조하세요.
 
 ---
 
