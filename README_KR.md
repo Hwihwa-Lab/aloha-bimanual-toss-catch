@@ -89,11 +89,8 @@ model-index:
 > 📦 **공식 모델 허브**: [🤗 hwihwalab/aloha-bimanual-toss-catch-model](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model) | 🐙 **GitHub 저장소**: [Hwihwa-Lab/aloha-bimanual-toss-catch](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch) | 📊 **데이터셋 허브**: [hwihwalab/aloha-bimanual-toss-catch-telemetry](https://huggingface.co/datasets/hwihwalab/aloha-bimanual-toss-catch-telemetry)
 
 <div align="center">
-  <video autoplay loop muted playsinline width="100%" poster="assets/cockpit_preview.png" style="border-radius: 8px; border: 1px solid rgba(0,240,255,0.35); box-shadow: 0 12px 40px rgba(0,0,0,0.85);">
-    <source src="https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model/resolve/main/assets/demo_video.mp4" type="video/mp4">
-    <source src="assets/demo_video.mp4" type="video/mp4">
-  </video>
-  <p><em>그림 1: 3대 시그니처 구종(BULLET, LOB, HOOK)의 60fps 초고화질 실시간 요격 비디오 (4단계 위상 HUD, 탄도 게이지, 듀얼 손목 PiP 연동).</em></p>
+  <img src="assets/cockpit_preview.png" alt="ALOHA Toss & Catch 60fps 텔레메트리 콕핏" width="100%" style="border-radius: 8px; border: 1px solid rgba(0,240,255,0.35); box-shadow: 0 12px 40px rgba(0,0,0,0.85);" />
+  <p><em>그림 1: 4단계 위상 HUD, 탄도 고도 및 정점 델타 게이지, 요격 레이더, 듀얼 손목 PiP 카메라가 결합된 실시간 60fps 텔레메트리 콕핏. (실시간 요격 영상은 우측 상단의 <strong>Video Preview</strong> 코너에서 확인 가능)</em></p>
 </div>
 
 ---

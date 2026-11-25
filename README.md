@@ -89,11 +89,8 @@ model-index:
 > 📦 **Official Model Hub**: [🤗 hwihwalab/aloha-bimanual-toss-catch-model](https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model) | 🐙 **GitHub Repository**: [Hwihwa-Lab/aloha-bimanual-toss-catch](https://github.com/Hwihwa-Lab/aloha-bimanual-toss-catch) | 📊 **Dataset Hub**: [hwihwalab/aloha-bimanual-toss-catch-telemetry](https://huggingface.co/datasets/hwihwalab/aloha-bimanual-toss-catch-telemetry)
 
 <div align="center">
-  <video autoplay loop muted playsinline width="100%" poster="assets/cockpit_preview.png" style="border-radius: 8px; border: 1px solid rgba(0,240,255,0.35); box-shadow: 0 12px 40px rgba(0,0,0,0.85);">
-    <source src="https://huggingface.co/hwihwalab/aloha-bimanual-toss-catch-model/resolve/main/assets/demo_video.mp4" type="video/mp4">
-    <source src="assets/demo_video.mp4" type="video/mp4">
-  </video>
-  <p><em>Figure 1: High-Definition 60fps Real-Time Interception Video (BULLET, LOB, HOOK) with 4-Phase HUD, Ballistic Gauges, and Dual Wrist PiP Cameras.</em></p>
+  <img src="assets/cockpit_preview.png" alt="ALOHA Toss & Catch 60fps Telemetry Cockpit" width="100%" style="border-radius: 8px; border: 1px solid rgba(0,240,255,0.35); box-shadow: 0 12px 40px rgba(0,0,0,0.85);" />
+  <p><em>Figure 1: Real-time 60fps Telemetry Cockpit featuring 4-Phase HUD, Ballistic Altitude & Apex Delta Gauges, Intercept Radar, and Dual Wrist PiP Cameras. (Watch live video in the <strong>Video Preview</strong> corner above)</em></p>
 </div>
 
 ---
