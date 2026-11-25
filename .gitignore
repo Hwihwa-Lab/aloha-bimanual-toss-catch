@@ -18,7 +18,19 @@ venv/
 .cursorrules
 .agents/
 DOCS_*.md
+docs/
 MEMORY.md
+
+# Web Cockpit Static Deployment Assets (Dedicated to Hugging Face Spaces)
+assets/frames/
+assets/telemetry_data.json
+index.html
+style.css
+cockpit_sim.js
+setup_static_cockpit.py
+extract_cockpit_trajectories.py
+test_env.py
+test_render.py
 
 # Large Checkpoints (Exclude training artifacts, keep clean)
 checkpoints/*.zip
